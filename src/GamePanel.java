@@ -25,16 +25,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         g.setColor( Color.BLACK );
         g.fillRect( 0, 0, GameJump.WIDTH, GameJump.HEIGHT);
         
-        /*
-         * Decaying jump velocity,
-         * Increasing gravity velocity
-         */
-        if( (frameCount - startFrameCount) % 2 == 0 ) {
-            wonka.gravity += 2;
-            wonka.ySpeed += 7;
-        }
-        
-        wonka.update();
+        wonka.update(frameCount);
         wonka.draw( g );
     }
     
@@ -47,12 +38,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
        } else if( keyPressed == KeyEvent.VK_RIGHT) {
            wonka.xSpeed = 15;
        } else if( keyPressed == KeyEvent.VK_UP) {
-           if( !wonka.isJumping ){
-               wonka.ySpeed = Wonka.JUMP_HEIGHT;
-               wonka.gravity = wonka.startGravity;
-               startFrameCount = frameCount;
-               wonka.isJumping = true;
-           }
+           wonka.jump();
        }
     }
 
@@ -62,8 +48,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     
         if( keyPressed == KeyEvent.VK_LEFT || ( keyPressed == KeyEvent.VK_RIGHT)) {
             wonka.xSpeed = 0;
-        } else if( keyPressed == KeyEvent.VK_UP ) {
-            wonka.isJumping = false;
         }
     }
 
