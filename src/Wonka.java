@@ -15,7 +15,9 @@ public class Wonka {
     int startGravity = 1;
     int gravity = startGravity;
     boolean isJumping = false;
-    BufferedImage wonkaImage;
+    BufferedImage wonkaStandImage;
+    BufferedImage wonkaJump1Image;
+    BufferedImage wonkaJump2Image;
     
     public Wonka(int x, int y, int width, int height) {
         this.x = x;
@@ -24,9 +26,11 @@ public class Wonka {
         this.height = height;
         
         try {
-            wonkaImage = ImageIO.read(this.getClass().getResourceAsStream("wonka.png"));
+            wonkaStandImage = ImageIO.read(this.getClass().getResourceAsStream("wonka_stand.png"));
+            wonkaJump1Image = ImageIO.read(this.getClass().getResourceAsStream("wonka_jump1.png"));
+            wonkaJump2Image = ImageIO.read(this.getClass().getResourceAsStream("wonka_jump2.png"));
         } catch(Exception e) {
-            System.out.println( "ERROR: Unable to load iamge!" );
+            System.out.println( "ERROR: Unable to load images!" );
         }
     }
     
@@ -40,6 +44,12 @@ public class Wonka {
     }
     
     public void draw(Graphics g) {
-        g.drawImage(wonkaImage, x, y, width, height, null);
+        if( ySpeed < JUMP_HEIGHT / 2 ) {
+            g.drawImage(wonkaJump1Image, x, y, width, height, null);
+        } else if (isJumping) {
+            g.drawImage(wonkaJump2Image, x, y, width, height, null);
+        } else {
+            g.drawImage(wonkaStandImage, x, y, width, height, null);
+        }
     }
 }

@@ -25,8 +25,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         g.setColor( Color.BLACK );
         g.fillRect( 0, 0, GameJump.WIDTH, GameJump.HEIGHT);
         
-        // Decaying jump velocity,
-        // Increasing gravity velocity
+        /*
+         * Decaying jump velocity,
+         * Increasing gravity velocity
+         */
         if( (frameCount - startFrameCount) % 2 == 0 ) {
             wonka.gravity += 2;
             wonka.ySpeed += 7;
