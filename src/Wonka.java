@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 public class Wonka {
-    public static final int JUMP_HEIGHT = -60;
+    public static final int JUMP_VELOCITY = 60;
     int x;
     int y;
     int width;
@@ -13,11 +13,34 @@ public class Wonka {
     int xSpeed;
     int ySpeed;
     
+    /*
+     * To make gravity more realistic, we need an ever increasing gravity
+     * velocity the longer Wonka is in the air. So we need
+     * 1) a starting velocity variable
+     * 2) a gravity increment variable that increases the total velocity
+     * the longer Wonka is in the air.
+     */
+    int gravityIncrement = 2;
     int startGravity = 1;
     int gravity = startGravity;
     
+    /*
+     * Wonka will move upwards at a faster rate at the start of his jump than
+     * at the end. This variable will slow down how fast he moves upward the
+     * longer he is in the air.
+     */
+    int jumpDecayVelocity = 7;
+    
+    /*
+     * These variables will tell us how much game time has elapsed.
+     */
     int currentFrame = 0;
     int startJumpFrame = 0;
+    
+    /*
+     * This variable will indicate if Wonka is currently jumping. Useful for
+     * making sure Wonka doesn't 'double jump' while in mid-air.
+     */
     boolean jumping = false;
     
     BufferedImage wonkaStandImage;
@@ -39,9 +62,12 @@ public class Wonka {
         }
     }
     
+    /*
+     * Call this method when you want wonka to jump 
+     */
     public void jump() {
         if( ! jumping ){
-            ySpeed = Wonka.JUMP_HEIGHT;
+            ySpeed = Wonka.JUMP_VELOCITY;
             gravity = startGravity;
             startJumpFrame = this.currentFrame;
             jumping = true;
@@ -51,15 +77,20 @@ public class Wonka {
     public void update(int currentFrame) {
         this.currentFrame = currentFrame;
         x += xSpeed;
-        y += ySpeed + gravity;
+        y += gravity - ySpeed;
+        
+        /* 
+         * Increasing gravity velocity over time
+         */
+        gravity += gravityIncrement;
         
         /*
-         * Decaying jump velocity,
-         * Increasing gravity velocity
+         * Decaying jump velocity over time
          */
-        if( (currentFrame - startJumpFrame) % 2 == 0 ) {
-            gravity += 2;
-            ySpeed += 7;
+        if( jumping ) {
+            if( (currentFrame - startJumpFrame) % 2 == 0 ) {
+                ySpeed -= jumpDecayVelocity;
+            }
         }
         
         // On the ground
@@ -70,10 +101,16 @@ public class Wonka {
     }
     
     public void draw(Graphics g) {
-        if( ySpeed < JUMP_HEIGHT / 2 ) {
-            g.drawImage(wonkaJump1Image, x, y, width, height, null);
-        } else if (this.jumping) {
-            g.drawImage(wonkaJump2Image, x, y, width, height, null);
+        /*
+         * Different Wonka animations depending on whether he's jumping or
+         * standing still
+         */
+        if( jumping ) {
+            if( ySpeed > JUMP_VELOCITY / 2 ) {
+                g.drawImage(wonkaJump1Image, x, y, width, height, null);
+            } else {
+                g.drawImage(wonkaJump2Image, x, y, width, height, null);
+            }
         } else {
             g.drawImage(wonkaStandImage, x, y, width, height, null);
         }

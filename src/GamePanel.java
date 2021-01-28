@@ -16,7 +16,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     int startFrameCount = 0;
     
     public GamePanel() {
-        wonka = new Wonka(GameJump.WIDTH / 2, 400, 378 / 3, 653 / 3);
+        wonka = new Wonka(GameJump.WIDTH / 2, 400, 378 / 3, 720 / 3);
         fps = new Timer(1000 / 60, this);
         fps.start();
     }
@@ -45,7 +45,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     @Override
     public void keyReleased(KeyEvent e) {
         int keyPressed = e.getKeyCode();
-    
+        
         if( keyPressed == KeyEvent.VK_LEFT || ( keyPressed == KeyEvent.VK_RIGHT)) {
             wonka.xSpeed = 0;
         }
@@ -61,5 +61,4 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         frameCount++;
         repaint();
     }
-
 }
